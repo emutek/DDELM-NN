@@ -27,8 +27,10 @@ Number of subdomains spawned should be a square number.
 ### Some commands used for paper
 ```
 mpirun -n 64 python poisson.py --n 32 --M 0x400 --error_n 64 --plot_n 63 --save_img_paper -p grf_32_0b
-mpirun -n 64 python poisson_var.py --n 64 --M 0x1000 -error_n 128 --plot_n 127 --save_img_paper -p grf_32_0b_1f
-mpirun -n 64 python plate_bending.py --n 32 --M 0x400 --error_n 64 --plot_n 63 --save_img_paper
+mpirun -n 64 python poisson_var.py --n 64 --M 0x1000 -error_n 128 --plot_n 127 --save_img_paper -p grf_32_0b_1f --solver neum --theta .999
+mpirun -n 64 python biharmonic.py --n 32 --M 0x400 --error_n 64 --solver neum --theta .999 --lin_solver cg_cond
+mpirun -n 64 python poisson.py --n 32 --M 0x400 --error_n 64 --solver table_k2a2 --lin_solver cg_cond
+mpirun -n 64 python poisson.py --n 32 --M 0x400 --error_n 64 --solver table_theta --lin_solver cg_cond
 ```
 
 ### Options
@@ -38,3 +40,7 @@ mpirun -n 64 python plate_bending.py --n 32 --M 0x400 --error_n 64 --plot_n 63 -
   - `--error_n` subdomain grid for error computation
   - `--save_img_paper` for drawing figures used in paper
   - `--plot_n` subdomain grid for drawing figures used in paper
+  - `--plot_n` subdomain grid for drawing figures used in paper
+  - `--solver` default is DDELM-CS; `neum` is DDELM-CS with Neumann-Neumann acceleration; `table_k2a2` and `table_theta` can be used in `poisson.py` for the ablation studies
+  - `--theta` the mixing parameter for Neumann-Neumann acceleration; default is `1`
+  - `--lin_solver` default is CG; `cg_cond` is CG with the added step of estimating the condition number
